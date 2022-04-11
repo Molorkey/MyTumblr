@@ -1,3 +1,52 @@
+<?php
+// starting session function
+session_start();
+
+//create a predefined username and password since we do not have a database :)
+$acc_username = "bat";
+$acc_password = "man";
+$acc_fullname = "Wade Wilson";
+$acc_address = "Marvel PH";
+
+// check the current url for the redirections later
+$url_add = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+
+//condition to know if the button is clicked
+if(isset($_REQUEST['login_button']) === true)
+// get user and pass from form and compare to the predefined user and pass :)
+	// pag mali user
+	if ($_REQUEST['form_username'] != $acc_username) 
+	{
+		header("Location:".$url_add."?notexist");
+	}
+	//pag tama user pero mali pass 
+	else if ($_REQUEST['form_username']== $acc_username && $_REQUEST['form_password'] != $acc_password)
+{
+	header("Location: ".$url_add."?wrongpassword");
+}
+//Correct user and pass
+else if($_REQUEST['form_username']==$acc_username && $_REQUEST['form_password']== $acc_password)
+{
+	header("Location: ".$url_add."?success");
+	//create session variable
+	$_SESSION['ses_username']= $acc_username;
+	$_SESSION['ses_password']=$acc_password;
+	$_SESSION['ses_fullname']=$acc_fullname;
+	$_SESSION['ses_address']=$acc_address;
+
+}// end of correct user and pass
+
+
+
+
+
+
+
+?>
+
+
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -24,12 +73,44 @@
 		      	</div>
 		      	<h3 class="text-center mb-4">MyTumblr Login</h3>
 						
-						<form action="#" class="login-form">
+						<form method="POST" class="login-form">
 		      		<div class="form-group">
-		      			<input type="text" class="form-control rounded-left" placeholder="Username" required>
+
+		      				<?php
+		      				if(isset($_REQUEST['notexist'])===true)
+		      				{
+		      					echo "<div class='alert alert-danger' role='alert'> Username does not exist ...</div>";
+		      				}
+		      				else if (isset($_REQUEST['wrongpassword'])===true) 
+		      				{
+		      					echo "<div class='alert alert-warning' role='alert'> Incorrect Password. Please try again..</div>";
+		      				}
+		      				else if(isset($_REQUEST['success']) === true)
+		      				{
+		      					echo "<div class='alert alert-success' role='alert'> Success! Redirecting...</div>";
+		      					header("Refresh: 3; url=account.php");
+		      				}
+		      				elseif (isset($_REQUEST['logout'])===true) 
+		      				{
+		      					echo "<div class='alert alert-info' role='alert'> Sign out successful!</div>";
+		      				}
+		      				elseif (isset($_REQUEST['loginfirst'])===true) 
+		      				{
+		      					echo "<div class='alert alert-info' role='alert'> Input Username and Password.</div>";
+
+		      				}
+		      				elseif (isset($_SESSION['ses_username'])=== true) 
+		      				{
+		      					echo "<div class='alert alert-warning' role='alert'> Your account is still signed in.<a href='account.php'> Click here</a> to proceed</div>";
+		      				}
+		      				?>
+
+		      			
+
+		      			<input type="text" class="form-control rounded-left" placeholder="Username" name="form_username" required>
 		      		</div>
 	            <div class="form-group d-flex">
-	              <input type="password" class="form-control rounded-left" placeholder="Password" required>
+	              <input type="password" class="form-control rounded-left" placeholder="Password" name="form_password" required>
 	            </div>
 	            <div class="form-group d-md-flex">
 	            	<div class="w-50">
@@ -43,9 +124,10 @@
 								</div>
 	            </div>
 	            <div class="form-group">
-	            	<button type="submit" class="btn btn-primary rounded submit p-3 px-5">Get Started</button>
+	            	<button type="submit" class="btn btn-primary rounded submit p-3 px-5"name="login_button">Get Started</button>
 	            </div>
 	          </form>
+
 	        </div>
 				</div>
 			</div>
