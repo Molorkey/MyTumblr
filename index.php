@@ -3,10 +3,10 @@
 session_start();
 
 //create a predefined username and password since we do not have a database :)
-$acc_username = "bat";
-$acc_password = "man";
-$acc_fullname = "Wade Wilson";
-$acc_address = "Marvel PH";
+$acc_username = "Vincent Ray";
+$acc_password = "vincent12345";
+$acc_fullname = "Vincent Ray Orbien";
+$acc_address = "Santol, Boac, Marinduque";
 
 // check the current url for the redirections later
 $url_add = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
